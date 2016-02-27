@@ -11,6 +11,7 @@ import {ImagePanelListComponent} from '../components/image-panel-list.component'
 @Component({
   selector: 'stories',
   templateUrl: `app/stories/stories.component.html`,
+  styleUrls: ['app/stories/stories.component.css'],
   directives: [FORM_DIRECTIVES, ImagePanelListComponent]
 })
 

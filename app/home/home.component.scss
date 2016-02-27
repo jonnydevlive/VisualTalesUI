@@ -1,10 +1,42 @@
+@import '../palette';
+
 #wrapper{
   min-height: 100%;
   margin-bottom:-3.4em;
 }
 
+.container, header, footer{
+  padding:0 10%;
+}
+
+header, footer{
+  color:white;
+  background-color: $primary-color;
+}
+
 header{
   overflow:hidden;
+  
+  a{
+    color:white;
+    
+    &.pure-menu-link{
+      padding:1.1em 1em;
+      
+      &:hover{
+        color: $primary-color;
+      }
+    }
+  }
+  
+  .pure-menu-heading{
+    font-size:1.5em;
+    padding-left:0;
+    
+    &:hover{
+      background-color: transparent;  
+    }
+  }
   
   .navbar{
     margin-bottom:0;
@@ -12,8 +44,6 @@ header{
 }
 
 footer{
-  color:white;
-  
   div{
     padding:1em 0;
   }

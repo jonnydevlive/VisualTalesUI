@@ -6,9 +6,8 @@ var sass = require('gulp-sass');
 var rename = require('gulp-rename');
 
 var paths = {
-  typescript: ['public/app/**/*.ts'],
-  appSass: ['public/app/**/*.scss'],
-  materialSass: ['node_modules/bootstrap-material-design/sass/**/_*.scss']
+  typescript: ['app/**/*.ts'],
+  appSass: ['app/**/*.scss']
 }
 
 var tsProject = ts.createProject('tsconfig.json');
@@ -30,7 +29,7 @@ gulp.task('settings', function(){
               .pipe(gulp.dest('app'));
 });
 
-gulp.task('app-sass', function(){
+gulp.task('sass', function(){
   return gulp.src(paths.appSass[0], {base: "./"})
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('./'));
@@ -38,7 +37,7 @@ gulp.task('app-sass', function(){
 
 gulp.task('watch', function(){
 	gulp.watch(paths.typescript, ['typescript']);
-  gulp.watch(paths.appSass, ['app-sass']);
+  gulp.watch(paths.appSass, ['sass']);
 });
 
-gulp.task('default', ['typescript', 'settings', 'app-sass', 'watch'])
+gulp.task('build', ['typescript', 'settings', 'sass', 'watch'])

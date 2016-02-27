@@ -1,0 +1,24 @@
+@import 'palette';
+
+html{
+  height:100%;
+}
+
+body{
+  height:100%;
+  background-color: $primary-color-text;
+}
+
+h1{
+  color: $primary-color;
+}
+
+.pure-g > div {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.pure-button-primary, a.pure-button-primary{
+  background-color: $primary-color;
+}
