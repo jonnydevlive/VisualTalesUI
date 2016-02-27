@@ -1,7 +1,6 @@
-<h1 class="page-header">Stories</h1>
-<form>
-  <input type="text" class="form-control" [ngFormControl]="titleControl" [(ngModel)]="title">
-  <a *ngIf="title" class="button">Create Story</a>
+<h1>Stories</h1>
+<form class="pure-form pure-g">
+  <input class="pure-input-1" type="text" [ngFormControl]="titleControl" [(ngModel)]="title">
 </form>
-<div class="alert alert-danger" *ngIf="error">{{error}}</div>
+<a *ngIf="title" class="pure-button pure-button-primary">Create Story</a>
 <image-panel-list [list]="stories" [options]="{panelsPerLine:4}" [panelClick]="selectStory"></image-panel-list>
