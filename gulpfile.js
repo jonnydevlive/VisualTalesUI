@@ -36,7 +36,7 @@ gulp.task('sass', function(){
 });
 
 gulp.task('watch', function(){
-	gulp.watch(paths.typescript, ['typescript']);
+	gulp.watch(paths.typescript[0], ['typescript']);
   gulp.watch(paths.appSass, ['sass']);
 });
 

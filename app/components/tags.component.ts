@@ -1,68 +1,72 @@
-﻿import {Component} from 'angular2/core';
-import {TagService, ITag} from '../data/tag.service'
+﻿import {Component, OnInit, Input} from 'angular2/core';
+import {Control, NgControl} from 'angular2/common';
+import {TagService, Tag, TagList} from '../data/data'
 
 @Component({
-    selector: 'tags',
-    inputs: ['tags'],
-    template: `
+  selector: 'tags',
+  template: `
                 <div class="chip" *ngFor="#tag of tags">
                     {{tag.name}}
                     <span class="close-btn" (click)="delete(tag.id)">&times;</span>
                 </div>
                 <div class="add-chip">
-                    <input type="text" (focus)="onFocus()" #newTagControl (keyup)="autoGrow(newTagControl)" (keyup.enter)="add(newTagControl)" placeholder="Add Tag" />
-                    <span class="close-btn" *ngIf="isNewTagFocused" (click)="newTagCancel(newTagControl)">&times;</span>
-
+                  <form>
+                    <input type="text" ngControl="newTagControl" (focus)="onFocus()" #newTagElement (keyup.enter)="add(newTagElement)" placeholder="Add Tag">
+                    <span class="close-btn" *ngIf="isNewTagFocused" (click)="newTagCancel(newTagElement)">&times;</span>
+                  </form>
                 </div>
               `,
-    styleUrls: ['app/tags.component.css']
+  styleUrls: ['app/components/tags.component.css']
 })
-export class TagsComponent {
-    public tags: any[] = [];
-    isNewTagFocused: boolean = false;
-    newTagDefaultWidth: number = 50;
+export class TagsComponent implements OnInit {
+  @Input() tagList:TagList;
+  public tags: any[] = [];
+  newTagControl:Control; 
+  newTagElement:Element;
+  isNewTagFocused: boolean = false;
+  newTagDefaultWidth: number = 70;
 
-    public constructor(private _tagService: TagService) {
-    }
+  public constructor() { }
+  
+  ngOnInit(){
+    this.tagList.tags$.subscribe(
+      tags => this.tags = tags
+    );
+  }
+  
+  ngAfterViewInit(){
+    console.log(this.newTagElement);
+  }
+
+  public delete(id: number) {
+    this.tagList.removeTag(id);
+  }
+
+  public autoGrow(newTagElement) {
     
-    public delete(id: number) {
-        function findByIdFilter(tag) {
-            if (tag.id === id) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        this.tags = this.tags.filter(findByIdFilter);
-    }
+    var baseCount: number = 4;
+    var increaseBy: number = 8;
+    var width: number = this.newTagDefaultWidth + (newTagElement.value.length - baseCount < 0 ? 0 : newTagElement.value.length - baseCount) * increaseBy;
+    newTagElement.style = "width: " + width + "px";
+  }
 
-    public autoGrow(newTagControl) {
-        var baseCount: number = 4;
-        var increaseBy: number = 8;
-        var width: number = this.newTagDefaultWidth + (newTagControl.value.length - baseCount < 0 ? 0 : newTagControl.value.length - baseCount) * increaseBy;
-        newTagControl.style = "width: " + width +"px";
-    }
+  public onFocus() {
+    this.isNewTagFocused = true;
+  }
 
-    public onFocus() {
-        this.isNewTagFocused = true;
-    }
+  public newTagCancel(newTagElement) {
+    this.resetNewTag(newTagElement);
+  }
 
-    public newTagCancel(newTagControl) {
-        this.resetNewTag(newTagControl);
-    }
+  public add(newTagElement) {
+    this.tagList.addTag(newTagElement);
+    this.resetNewTag(newTagElement);
+  }
 
-    public add(newTagControl) {
-        this._tagService.createTag(<ITag>{ name: newTagControl.value })
-            .subscribe(
-                tag => this.tags = this.tags.concat([tag])
-            );
-        this.resetNewTag(newTagControl);
-    }
-
-    private resetNewTag(newTagControl) {
-        newTagControl.value = "";
-        newTagControl.blur();
-        newTagControl.style = "width: " + this.newTagDefaultWidth + "px";
-        this.isNewTagFocused = false;
-    }
+  private resetNewTag(newTagElement) {
+    newTagElement.value = "";
+    newTagElement.blur();
+    newTagElement.style = "width: " + this.newTagDefaultWidth + "px";
+    this.isNewTagFocused = false;
+  }
 }

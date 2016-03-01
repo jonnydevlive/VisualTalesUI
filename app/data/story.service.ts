@@ -2,21 +2,21 @@ import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Observable';
 
-import {VisualTalesHttpService, ICharacter, IScene, ITag} from './data';
+import {VisualTalesHttpService, Character, Scene, Tag} from './data';
 
 @Injectable()
 export class StoryService {
-  constructor(private _visualTalesHttp:VisualTalesHttpService<IStory>){ 
-    this._visualTalesHttp.setUrl('stories');
+  private _storiesPath:any[] = ['/stories'];
+  
+  constructor(private _visualTalesHttp:VisualTalesHttpService){}
+
+  getStory(id:number):Observable<Story>{
+    return this._visualTalesHttp.get<Story>(this._storiesPath, id);
   }
 
-  getStory(id:number):Observable<IStory>{
-    return this._visualTalesHttp.get(id);
-  }
-
-  getStories(searchParams:any):Observable<IStory[]>{
+  getStories(searchParams:any):Observable<Story[]>{
     let params:any = this.getStoryParams(searchParams);
-    return this._visualTalesHttp.getAll(params); 
+    return this._visualTalesHttp.getAll<Story>(params); 
   }
   
   private getStoryParams({title='', tag_ids=[], page=1, page_size=20}):any{
@@ -36,43 +36,52 @@ export class StoryService {
     return params;
   }
   
-  createStory(story:IStory):Observable<IStory>{
-    return this._visualTalesHttp.create(story);
+  createStory(story:Story):Observable<Story>{
+    return this._visualTalesHttp.create<Story>(this._storiesPath, story);
   }
   
-  updateStory(story:IStory):Observable<IStory>{
-    return this._visualTalesHttp.update(story);
+  updateStory(story:Story):Observable<Story>{
+    return this._visualTalesHttp.update<Story>(this._storiesPath, story);
   }
   
-  
-  addCharacterToStory(id:number, payload:any):Observable<ICharacter>{
-    return this._visualTalesHttp.createChild<ICharacter>(id, 'characters', payload);
+  addCharacterToStory(id:number, payload:any):Observable<Character>{
+    return this._visualTalesHttp.create<Character>(this.getCharacterPath(id), payload);
   }
   
-  getCharactersForStory(id:number):Observable<ICharacter[]>{
-    return this._visualTalesHttp.getChildren<ICharacter>(id, 'characters');
+  getCharactersForStory(id:number):Observable<Character[]>{
+    return this._visualTalesHttp.getAll<Character>(this.getCharacterPath(id));
   }
   
-  
-  addSceneToStory(id:number, payload:any):Observable<IScene>{
-    return this._visualTalesHttp.createChild<IScene>(id, 'scenes', payload);  
+  private getCharacterPath(id:number):any[]{
+    return this._storiesPath.concat([id, 'characters']);
   }
   
-  getScenesForStory(id:number):Observable<IScene[]>{
-    return this._visualTalesHttp.getChildren<IScene>(id, 'scenes');
+  addSceneToStory(id:number, payload:any):Observable<Scene>{
+    return this._visualTalesHttp.create<Scene>(this.getScenesPath(id), payload);  
   }
   
-  
-  addTagToStory(id:number, payload:any):Observable<ITag>{
-    return this._visualTalesHttp.createChild<ITag>(id, 'tags', payload);
+  getScenesForStory(id:number):Observable<Scene[]>{
+    return this._visualTalesHttp.getAll<Scene>(this.getScenesPath(id));
   }
   
-  getTagsForStory(id:number):Observable<ITag[]>{
-    return this._visualTalesHttp.getChildren<ITag>(id, 'tags');
+  private getScenesPath(id:number){
+    return this._storiesPath.concat([id, 'scenes']);
+  }
+  
+  addTagToStory(id:number, payload:any):Observable<Tag>{
+    return this._visualTalesHttp.create<Tag>(this.getTagsPath(id), payload);
+  }
+  
+  getTagsForStory(id:number):Observable<Tag[]>{
+    return this._visualTalesHttp.getAll<Tag>(this.getTagsPath(id), 'tags');
+  }
+  
+  private getTagsPath(id:number){
+    return this._storiesPath.concat([id, 'tags']);
   }
 }
 
-export interface IStory{
+export interface Story{
   id:number;
   title:string;
   description?:string;
