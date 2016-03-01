@@ -6,20 +6,20 @@ import {VisualTalesHttpService} from './data';
 
 @Injectable()
 export class PoseService {
-  constructor(private _visualTalesHttp:VisualTalesHttpService<IPose>) {
-    _visualTalesHttp.setUrl('poses');
-  }
+  private _posesPath:any[] = ['poses'];
   
-  updatePose(payload:any):Observable<IPose>{
-    return this._visualTalesHttp.update(payload);
+  constructor(private _visualTalesHttp:VisualTalesHttpService) {}
+  
+  updatePose(payload:any):Observable<Pose>{
+    return this._visualTalesHttp.update(this._posesPath, payload);
   }
   
   deletePose(id:number):Observable<{}>{
-    return this._visualTalesHttp.delete(id);
+    return this._visualTalesHttp.delete(this._posesPath, id);
   }
 }
 
-export interface IPose{
+export interface Pose{
   id?:number;
   name:string;
 }

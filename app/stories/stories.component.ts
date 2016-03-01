@@ -5,47 +5,48 @@ import {Router} from 'angular2/router';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
-import {StoryService, IStory} from '../data/data';
+import {StoryService, Story, TagList} from '../data/data';
 import {ImagePanelListComponent} from '../components/image-panel-list.component';
+import {TagsComponent} from '../components/tags.component';
 
 @Component({
   selector: 'stories',
-  templateUrl: `app/stories/stories.component.html`,
+  templateUrl: 'app/stories/stories.component.html',
   styleUrls: ['app/stories/stories.component.css'],
-  directives: [FORM_DIRECTIVES, ImagePanelListComponent]
+  directives: [FORM_DIRECTIVES, ImagePanelListComponent, TagsComponent]
 })
 
 export class StoriesComponent implements OnInit {
-  stories:IStory[];
-  storyComponentObservable:Subject<{}>;
+  stories:Story[];
   
   titleControl = new Control();
   
   title:string;
-  tags:any[];
+  storyTags:TagList;
   error:string;
   
   constructor(private _storyService:StoryService, private _router:Router) {
-    this.storyComponentObservable = new Subject();
+    this.storyTags = new TagList();
+    
+    this.stories = this.stories || [];
     
     let titleObservable = this.titleControl.valueChanges
                  .debounceTime(800)
                  .distinctUntilChanged();
       
-    Observable.merge(this.storyComponentObservable, titleObservable)
-        .flatMap(output => this._storyService.getStories({title:this.title, tag_ids:this.tags}))
+    Observable.forkJoin(titleObservable, this.storyTags.tags$)
+        .flatMap(searchInfo => this._storyService.getStories({title:searchInfo[0], tag_ids:searchInfo[1]}))
         .subscribe(
-          stories => this.stories = <IStory[]>stories,
+          stories => this.stories = <Story[]>stories,
           error => this.error = error.toString()
         );
   }
   
   ngOnInit() {
-    this.tags = [];
-    this.storyComponentObservable.next(this.tags);
+    
   }
   
-  selectStory = (story:IStory) => {
+  selectStory = (story:Story) => {
       this._router.navigate(['StoryEditor', { id: story.id }]);
   };
 }

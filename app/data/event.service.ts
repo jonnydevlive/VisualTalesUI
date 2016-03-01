@@ -6,20 +6,20 @@ import {VisualTalesHttpService} from './data';
 
 @Injectable()
 export class EventService {
-  constructor(private _visualTalesHttp:VisualTalesHttpService<IEvent>) {
-    _visualTalesHttp.setUrl('events');
-  }
+  private _eventsPath:any[] = ['events'];
+  
+  constructor(private _visualTalesHttp:VisualTalesHttpService) {}
 
-  updateEvent(payload:any):Observable<IEvent>{
-    return this._visualTalesHttp.update(payload);
+  updateEvent(payload:any):Observable<Event>{
+    return this._visualTalesHttp.update(this._eventsPath, payload);
   }
   
   deleteEvent(id:number):Observable<{}>{
-    return this._visualTalesHttp.delete(id);
+    return this._visualTalesHttp.delete(this._eventsPath, id);
   }
 }
 
-export interface IEvent{
+export interface Event{
   id?:number;
   order:number;
   positionX?:number;

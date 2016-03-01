@@ -13,12 +13,17 @@ h1{
   color: $primary-color;
 }
 
-.pure-g > div {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+a{
+  color: $primary-color;
+  cursor: pointer;
+  
+  &:hover{
+    color: $primary-color;
+    text-decoration: none;
+  }
 }
 
-.pure-button-primary, a.pure-button-primary{
+.primary-background{
+  color: white;
   background-color: $primary-color;
 }

@@ -2,32 +2,36 @@ import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Observable';
 
-import {VisualTalesHttpService, IEvent} from './data';
+import {VisualTalesHttpService, Event} from './data';
 
 @Injectable()
 export class SceneService {
-  constructor(private _visualTalesHttp:VisualTalesHttpService<IScene>) {
-    _visualTalesHttp.setUrl('poses');
-  }
+  private _scenesPath:any[] = ['scenes'];
   
-  updateScene(payload:any):Observable<IScene>{
-    return this._visualTalesHttp.update(payload);
+  constructor(private _visualTalesHttp:VisualTalesHttpService) {}
+  
+  updateScene(payload:any):Observable<Scene>{
+    return this._visualTalesHttp.update<Scene>(this._scenesPath, payload);
   }
   
   deleteScene(id:number):Observable<{}>{
-    return this._visualTalesHttp.delete(id);
+    return this._visualTalesHttp.delete(this._scenesPath, id);
   }
   
-  getEventsForScene(id:number):Observable<IEvent[]>{
-    return this._visualTalesHttp.getChildren<IEvent>(id, 'events');
+  getEventsForScene(id:number):Observable<Event[]>{
+    return this._visualTalesHttp.getAll<Event>(this.getEventsPath(id));
   }
   
-  addEventToScene(id:number, payload:any):Observable<IEvent>{
-    return this._visualTalesHttp.createChild<IEvent>(id, 'events', payload);
+  addEventToScene(id:number, payload:any):Observable<Event>{
+    return this._visualTalesHttp.create<Event>(this.getEventsPath(id), payload);
+  }
+  
+  private getEventsPath(id:number):any[]{
+    return this._scenesPath.concat([id, 'events']);
   }
 }
 
-export interface IScene{
+export interface Scene{
   id?:number;
   name:string;
 }

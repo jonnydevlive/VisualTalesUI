@@ -1,5 +1,5 @@
 import {Component, OnInit} from 'angular2/core';
-import {StoryService,IStory,ICharacter,IScene} from '../data/data';
+import {StoryService,Story,Character,Scene} from '../data/data';
 import {RouteParams, Router} from 'angular2/router';
 
 import {ImagePanelListComponent} from '../components/image-panel-list.component';
@@ -14,9 +14,9 @@ import {Observable} from 'rxjs/Observable';
 
 export class StoryEditorComponent implements OnInit {
 	
-	story:IStory;
-  characters:ICharacter[];
-  scenes:IScene[];
+	story:Story;
+  characters:Character[];
+  scenes:Scene[];
 
   constructor(private _storyService:StoryService, private _routeParams:RouteParams, private _router:Router) { }
   
@@ -45,7 +45,7 @@ export class StoryEditorComponent implements OnInit {
         );
   }
   
-  selectScene = (scene:IScene) => {
+  selectScene = (scene:Scene) => {
     this._router.navigate(['SceneEditor', {id:scene.id}]);
   }
 }
