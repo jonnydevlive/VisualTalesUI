@@ -1,72 +1,75 @@
 ﻿import {Component, OnInit, Input} from 'angular2/core';
-import {Control, NgControl} from 'angular2/common';
+import {Control} from 'angular2/common';
 import {TagService, Tag, TagList} from '../data/data'
 
 @Component({
   selector: 'tags',
-  template: `
-                <div class="chip" *ngFor="#tag of tags">
-                    {{tag.name}}
-                    <span class="close-btn" (click)="delete(tag.id)">&times;</span>
-                </div>
-                <div class="add-chip">
-                  <form>
-                    <input type="text" ngControl="newTagControl" (focus)="onFocus()" #newTagElement (keyup.enter)="add(newTagElement)" placeholder="Add Tag">
-                    <span class="close-btn" *ngIf="isNewTagFocused" (click)="newTagCancel(newTagElement)">&times;</span>
-                  </form>
-                </div>
-              `,
+  templateUrl: 'app/components/tags.component.html',
   styleUrls: ['app/components/tags.component.css']
 })
 export class TagsComponent implements OnInit {
   @Input() tagList:TagList;
-  public tags: any[] = [];
-  newTagControl:Control; 
-  newTagElement:Element;
-  isNewTagFocused: boolean = false;
-  newTagDefaultWidth: number = 70;
+  public tags:Tag[] = [];
+  
+  addTagControl:Control;
+  foundTags:Tag[];
+  
+  isAddTagFocused:boolean;
+  addTagWidth:string;
+  addTagName:string;
 
-  public constructor() { }
+  public constructor(private _tagService:TagService) {
+    this.foundTags = [];
+    this.isAddTagFocused = false;
+    this.addTagControl = new Control();
+    
+    this.addTagControl.valueChanges
+      .flatMap(tagName => this._tagService.getTags(tagName))
+      .subscribe(
+        (foundTags:Tag[]) => {
+          this.autoGrow(foundTags.length > 0);
+          this.foundTags = foundTags;
+        } 
+      );
+  }
   
   ngOnInit(){
     this.tagList.tags$.subscribe(
       tags => this.tags = tags
     );
   }
-  
-  ngAfterViewInit(){
-    console.log(this.newTagElement);
-  }
 
   public delete(id: number) {
     this.tagList.removeTag(id);
   }
 
-  public autoGrow(newTagElement) {
-    
-    var baseCount: number = 4;
-    var increaseBy: number = 8;
-    var width: number = this.newTagDefaultWidth + (newTagElement.value.length - baseCount < 0 ? 0 : newTagElement.value.length - baseCount) * increaseBy;
-    newTagElement.style = "width: " + width + "px";
+  public autoGrow(tagsFound:boolean) {
+    if(this.addTagName === undefined || this.addTagName === ''){
+      this.addTagWidth = '';
+    } else {
+      let width:number = (this.addTagName.length * .6) + 1.3;
+      this.addTagWidth = width + 'em';
+    }
   }
 
   public onFocus() {
-    this.isNewTagFocused = true;
+    this.isAddTagFocused = true;
   }
 
-  public newTagCancel(newTagElement) {
-    this.resetNewTag(newTagElement);
+  public add() {
+    let tagToAdd:Tag = this.foundTags.find(
+      tag => tag.name === this.addTagName
+    );
+    
+    tagToAdd = tagToAdd || {name:this.addTagName};
+    
+    this.tagList.addTag(tagToAdd);
+    this.resetAddTag();
   }
 
-  public add(newTagElement) {
-    this.tagList.addTag(newTagElement);
-    this.resetNewTag(newTagElement);
-  }
-
-  private resetNewTag(newTagElement) {
-    newTagElement.value = "";
-    newTagElement.blur();
-    newTagElement.style = "width: " + this.newTagDefaultWidth + "px";
-    this.isNewTagFocused = false;
+  private resetAddTag() {
+    this.addTagName = '';
+    this.addTagWidth = '';
+    this.isAddTagFocused = false;
   }
 }

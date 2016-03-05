@@ -4,9 +4,9 @@
   "scripts": {
     "postinstall": "npm run typings install",
     "build:w": "gulp build",
-    "tsc": "tsc",
+    "tsc": "tsc -p .",
     "sass:w": "node-sass -w --include-path app/**/*.scss",
-    "tsc:w": "tsc -w",
+    "tsc:w": "tsc -w -p .",
     "dev": "concurrent \"npm run build:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "typings": "typings"

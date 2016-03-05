@@ -1,0 +1,15 @@
+<div class="tags">
+  <div class="chip" *ngFor="#tag of tags">
+      {{tag.name}}
+      <span class="close-btn" (click)="delete(tag.id)">&times;</span>
+  </div>
+  <div class="add-chip">
+    <form>
+      <input list="addTag" type="text" [ngFormControl]="addTagControl" [(ngModel)]="addTagName" [style.width]="addTagWidth" (focus)="onFocus()" (keyup.enter)="add()" placeholder="Add Tag">
+      <datalist id="addTag">
+        <option *ngFor="#tag of foundTags" [value]="tag.name"></option>
+      </datalist>
+      <span class="close-btn" *ngIf="isAddTagFocused" (click)="resetAddTag()">&times;</span>
+    </form>
+  </div>  
+</div>

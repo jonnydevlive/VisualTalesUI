@@ -10,9 +10,11 @@ var paths = {
   appSass: ['app/**/*.scss']
 }
 
+
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('typescript', function(){
+  
 	var tsResult = tsProject.src()
 		.pipe(ts(tsProject));
  
@@ -36,7 +38,7 @@ gulp.task('sass', function(){
 });
 
 gulp.task('watch', function(){
-	gulp.watch(paths.typescript[0], ['typescript']);
+	gulp.watch(paths.typescript, ['settings', 'typescript']);
   gulp.watch(paths.appSass, ['sass']);
 });
 

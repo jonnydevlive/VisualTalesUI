@@ -19,7 +19,7 @@ import {TagsComponent} from '../components/tags.component';
 export class StoriesComponent implements OnInit {
   stories:Story[];
   
-  titleControl = new Control();
+  titleControl:Control;
   
   title:string;
   storyTags:TagList;
@@ -27,6 +27,7 @@ export class StoriesComponent implements OnInit {
   
   constructor(private _storyService:StoryService, private _router:Router) {
     this.storyTags = new TagList();
+    this.titleControl = new Control();
     
     this.stories = this.stories || [];
     
