@@ -12,14 +12,6 @@ var paths = {
 
 var tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('typescript', function(){
-	var tsResult = tsProject.src()
-		.pipe(ts(tsProject));
- 
-	return tsResult.js.pipe(gulp.dest('./'));
-});
-
-
 gulp.task('settings', function(){
   var tsResult = gulp.src('settings/' + process.env.NODE_ENV + '.settings.ts')
     .pipe(ts(tsProject));
@@ -36,8 +28,7 @@ gulp.task('sass', function(){
 });
 
 gulp.task('watch', function(){
-	gulp.watch(paths.typescript[0], ['typescript']);
   gulp.watch(paths.appSass, ['sass']);
 });
 
-gulp.task('build', ['typescript', 'settings', 'sass', 'watch'])
+gulp.task('build', ['settings', 'sass', 'watch'])

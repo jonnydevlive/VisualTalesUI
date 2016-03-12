@@ -14,6 +14,6 @@
     "typings/main",
     "typings/main.d.ts",
     "settings",
-    "app/settings.ts"
+    "app/settings.d.ts"
   ]
 }
