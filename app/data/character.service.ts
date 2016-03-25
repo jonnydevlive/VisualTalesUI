@@ -2,7 +2,8 @@ import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Observable';
 
-import {VisualTalesHttpService, Pose} from './data';
+import {Pose} from './data';
+import {VisualTalesHttpService} from '../http/http';
 
 @Injectable()
 export class CharacterService {

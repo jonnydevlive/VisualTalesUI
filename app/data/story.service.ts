@@ -2,11 +2,12 @@ import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Observable';
 
-import {VisualTalesHttpService, Character, Scene, Tag} from './data';
+import {Character, Scene, Tag} from './data';
+import {VisualTalesHttpService} from '../http/http';
 
 @Injectable()
 export class StoryService {
-  private _storiesPath:any[] = ['/stories'];
+  private _storiesPath:any[] = ['stories'];
   
   constructor(private _visualTalesHttp:VisualTalesHttpService){}
 
@@ -14,9 +15,9 @@ export class StoryService {
     return this._visualTalesHttp.get<Story>(this._storiesPath, id);
   }
 
-  getStories(searchParams:any):Observable<Story[]>{
+  getStories(searchParams:any = {}):Observable<Story[]>{
     let params:any = this.getStoryParams(searchParams);
-    return this._visualTalesHttp.getAll<Story>(params); 
+    return this._visualTalesHttp.getAll<Story>(this._storiesPath, params); 
   }
   
   private getStoryParams({title='', tag_ids=[], page=1, page_size=20}):any{

@@ -34,8 +34,7 @@ export class StoriesComponent implements OnInit {
                  .debounceTime(800)
                  .distinctUntilChanged();
       
-    Observable.forkJoin(titleObservable, this.storyTags.tags$)
-        .flatMap(searchInfo => this._storyService.getStories({title:searchInfo[0], tag_ids:searchInfo[1]}))
+        this._storyService.getStories()
         .subscribe(
           stories => this.stories = <Story[]>stories,
           error => this.error = error.toString()

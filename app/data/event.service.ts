@@ -2,7 +2,7 @@ import {Injectable} from 'angular2/core';
 
 import {Observable} from 'rxjs/Observable';
 
-import {VisualTalesHttpService} from './data';
+import {VisualTalesHttpService} from '../http/http';
 
 @Injectable()
 export class EventService {
