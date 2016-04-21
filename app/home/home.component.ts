@@ -18,5 +18,4 @@ import {SceneEditorComponent} from '../scenes/scenes';
 ])
 
 export class HomeComponent {
-  
 }

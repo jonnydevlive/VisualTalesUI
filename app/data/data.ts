@@ -1,5 +1,5 @@
 export * from './tag.service';
-export * from './tag-list.class';
+export * from './tag-list';
 export * from './pose.service';
 export * from './character.service';
 export * from './event.service';

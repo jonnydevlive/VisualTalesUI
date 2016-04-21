@@ -3,34 +3,33 @@
   "version": "0.0.1",
   "scripts": {
     "postinstall": "npm run typings install",
-    "build:w": "gulp build",
+    "settings": "gulp settings",
     "tsc": "tsc",
-    "sass:w": "node-sass -w --include-path app/**/*.scss",
+    "sass:w": "node-sass -w -r app --output app",
     "tsc:w": "tsc -w",
-    "dev": "concurrent \"npm run build:w\" \"npm run tsc:w\" \"npm run lite\" ",
+    "dev": "concurrent \"npm run sass:w\" \"npm run settings\" \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "typings": "typings"
   },
   "license": "MIT",
   "dependencies": {
-    "angular2": "2.0.0-beta.12",  
+    "angular2": "2.0.0-beta.15",  
     "bootstrap-sass": "^3.3.6",
-    "es6-promise": "^3.0.2",
+    "es6-promise": "^3.0.6",
     "es6-shim": "^0.35.0",
-    "gulp": "^3.9.1",
-    "gulp-sass": "^2.2.0",
+    "node-sass": "3.4.2",
     "gulp-typescript": "^2.11.0",
-    "material-design-icons": "^2.2.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.2",
-    "systemjs": "0.19.24",
-    "zone.js": "0.6.6"
+    "systemjs": "0.19.26",
+    "zone.js": "0.6.10"
   },
   "devDependencies": {
     "concurrently": "^2.0.0",
     "gulp-rename": "^1.2.2",
     "lite-server": "^2.1.0",
     "typescript": "^1.8.9",
-    "typings":"^0.7.9"
+    "typings": "^0.7.9",
+    "tslint": "3.7.4"
   }
 }

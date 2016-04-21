@@ -10,7 +10,6 @@ import {AuthenticationService} from './http';
 export class VisualTalesHttpService {
   private _headers:Headers;
   private _url:string;
-  private _token:string;
   private _tokenRequest$:Observable<void>;
   
   constructor(private _http:Http, private _authenticationService:AuthenticationService) {
@@ -91,20 +90,20 @@ export class VisualTalesHttpService {
   
   private request(url:string, requestOptions?:RequestOptions):Observable<Response>{
     let request$:Observable<Response> = this._http.request(`${Settings.API_URL }/${url}`, requestOptions); 
-    let updatedRequest$:Observable<Response>;
-    
-    if(!this._token){
+    return this.getAuthenticatedRequest(request$);
+  }
+  
+  private getAuthenticatedRequest(request$:Observable<Response>):Observable<Response>{
+    if(!this._headers.has('X-Authorization')){
       if(!this._tokenRequest$){
         this._tokenRequest$ = this._authenticationService.authenticateGuestUser()
-          .map(
-            (res:any) => { this._headers.set('X-Authorization', res.auth_token); }
-          )
+          .map((res:any) => { this._headers.set('X-Authorization', res.auth_token); } )
       } 
       
-      updatedRequest$ = this._tokenRequest$.flatMap(() => request$);
+      return this._tokenRequest$.flatMap(() => request$);
     }
     
-    return updatedRequest$ || request$;
+    return request$;
   }
   
   private logError(error: Error){

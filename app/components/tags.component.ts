@@ -33,17 +33,12 @@ export class TagsComponent implements OnInit {
       tags => this.tags = tags
     );
   }
-  
-  ngAfterViewInit(){
-    console.log(this.newTagElement);
-  }
 
   public delete(id: number) {
     this.tagList.removeTag(id);
   }
 
   public autoGrow(newTagElement) {
-    
     var baseCount: number = 4;
     var increaseBy: number = 8;
     var width: number = this.newTagDefaultWidth + (newTagElement.value.length - baseCount < 0 ? 0 : newTagElement.value.length - baseCount) * increaseBy;
