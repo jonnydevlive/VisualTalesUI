@@ -2,7 +2,6 @@ var process = require('process');
 
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
-var sass = require('gulp-sass');
 var rename = require('gulp-rename');
 
 var paths = {
@@ -20,15 +19,3 @@ gulp.task('settings', function(){
               .pipe(rename('settings.js'))
               .pipe(gulp.dest('app'));
 });
-
-gulp.task('sass', function(){
-  return gulp.src(paths.appSass[0], {base: "./"})
-    .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('watch', function(){
-  gulp.watch(paths.appSass, ['sass']);
-});
-
-gulp.task('build', ['settings', 'sass', 'watch'])

@@ -1,4 +1,4 @@
-import {Component, OnInit} from 'angular2/core';
+import {Component} from 'angular2/core';
 import {Control, FORM_DIRECTIVES} from 'angular2/common';
 import {Router} from 'angular2/router';
 
@@ -16,7 +16,7 @@ import {TagsComponent} from '../components/tags.component';
   directives: [FORM_DIRECTIVES, ImagePanelListComponent, TagsComponent]
 })
 
-export class StoriesComponent implements OnInit {
+export class StoriesComponent{
   stories:Story[];
   
   titleControl = new Control();
@@ -30,19 +30,19 @@ export class StoriesComponent implements OnInit {
     
     this.stories = this.stories || [];
     
-    let titleObservable = this.titleControl.valueChanges
+    let tagIds$ = this.storyTags.tags$
+      .map(tags => tags.map(tag => tag.id))
+    
+    let title$ = this.titleControl.valueChanges
                  .debounceTime(800)
                  .distinctUntilChanged();
-      
-        this._storyService.getStories()
-        .subscribe(
-          stories => this.stories = <Story[]>stories,
-          error => this.error = error.toString()
-        );
-  }
-  
-  ngOnInit() {
     
+    Observable.combineLatest(title$, tagIds$)
+      .flatMap(searchParams => this._storyService.getStories({title: searchParams[0], tags_ids:searchParams[1]}))
+      .subscribe(
+        (stories:Story[]) => { this.stories = stories; },
+        error => { this.error = error.toString(); }
+      )
   }
   
   selectStory = (story:Story) => {

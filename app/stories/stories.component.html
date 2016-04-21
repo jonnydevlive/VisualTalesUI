@@ -5,9 +5,11 @@
   <div class="input-group">
     <input class="form-control" type="text" [ngFormControl]="titleControl" [(ngModel)]="title">
     <span class="input-group-btn">
-      <button class="btn btn-default" type="button" [disabled]="stories.length > 0">Add Story</button>
+      <button class="btn btn-primary" type="button" [disabled]="stories.length > 0">Add Story</button>
     </span>
   </div>
 </form>
+
 <tags [tagList]="storyTags"></tags>
+
 <image-panel-list [list]="stories" [options]="{panelsPerLine:4}" [panelClick]="selectStory"></image-panel-list>
